@@ -1,15 +1,20 @@
 import { notFound } from "next/navigation";
 import { events } from "@/lib/data";
-import { Metadata } from "next";
+import type { Metadata } from "next";
+
+type Params = {
+  id: string;
+};
 
 export async function generateStaticParams() {
   return events.map((event) => ({ id: event.id }));
 }
 
+// ✅ SEO metadata for each event page
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string };
+  params: Params;
 }): Promise<Metadata> {
   const event = events.find((e) => e.id === params.id);
 
@@ -19,11 +24,7 @@ export async function generateMetadata({
   };
 }
 
-export default function EventDetailPage({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default function EventDetailPage({ params }: { params: Params }) {
   const event = events.find((e) => e.id === params.id);
 
   if (!event) return notFound();
